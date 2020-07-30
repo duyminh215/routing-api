@@ -56,7 +56,7 @@ Google đã có hàm đó cho chúng ta. Tuy nhiên, muốn sử dụng hàm đ�
 
 Qua nghiên cứu thì mình đã tìm được một thư viện open source rất hay để tính khoảng cách đường đi giữa 2 tọa độ.
 
-####3. Tính khoảng cách đường đi giữa 2 điểm có tọa độ latitude và longitude biết trước:#####
+#### 3. Tính khoảng cách đường đi giữa 2 điểm có tọa độ latitude và longitude biết trước
 Thư viện mình đã sử dụng có tên là Graphhopper, mã nguồn mở ở link sau: https://github.com/graphhopper/graphhopper.
 
 Các bạn cần phải có một data về bản đồ Việt Nam import vào trong thư viện này để tính toán khoảng cách giữa 2 điểm có latitude và longitude biết trước.

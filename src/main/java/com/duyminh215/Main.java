@@ -13,10 +13,11 @@ public class Main {
 
     final static String osmFile = "resources/vietnam-latest.osm.pbf";
     private static final String graphFolder = "resources/map";
+    private static GraphHopper hopper;
     public static void main(String[] args){
         System.out.println("test");
         // create one GraphHopper instance
-        GraphHopper hopper = new GraphHopperOSM().forServer();
+        hopper = new GraphHopperOSM().forServer();
         hopper.setDataReaderFile(osmFile);
         // where to store graphhopper files?
         hopper.setGraphHopperLocation(graphFolder);
@@ -35,27 +36,49 @@ public class Main {
         // of course this is dependent on the area you import
         hopper.importOrLoad();
 //        GHResponse ph = graphHopper.route(new GHRequest(21.013268, 105.812856, 21.023323, 105.820055));
-        GHRequest req = new GHRequest(21.013268, 105.812856, 21.023323, 105.820055).
-                // note that we have to specify which profile we are using even when there is only one like here
+        double originLat1 = 21.013268;
+        double originLon1 = 105.812856;
+        double originLat2 = 21.023323;
+        double originLon2 = 105.820055;
+        long startTime = System.currentTimeMillis();
+        System.out.println("Start time = " + startTime);
+        for(int i = 0; i < 1000; i++){
+            double la1 = generateRandomLatitude(originLat1);
+            double lo1 = generateRandomLongitude(originLon1);
+            double la2 = generateRandomLatitude(originLat2);
+            double lo2 = generateRandomLongitude(originLon2);
+            calculateDistance(la1, lo1, la2, lo2);
+        }
+        long endTime = System.currentTimeMillis();
+        System.out.println("End time = " + endTime);
+        System.out.println("Duration = " + (endTime - startTime));
+    }
+
+    public static void calculateDistance(double la1, double lo1, double la2, double lo2){
+        GHRequest req = new GHRequest(la1, lo1, la2, lo2).
                         setProfile("car").
                         setLocale(Locale.US);
         GHResponse rsp = hopper.route(req);
-
-        // first check for errors
         if(rsp.hasErrors()) {
-            // handle them!
-            // rsp.getErrors()
+            System.out.println("Error = "+rsp.getErrors());
             return;
         }
-
-        // use the best path, see the GHResponse class for more possibilities.
         ResponsePath path = rsp.getBest();
-
-        // points, distance in meters and time in millis of the full path
         PointList pointList = path.getPoints();
         double distance = path.getDistance();
         long timeInMs = path.getTime();
-        System.out.println("distancce = "+distance);
+        System.out.println("distance = "+distance);
+    }
 
+    public static double generateRandomLatitude(double originLatitude){
+        double randomNumber = (Math.random() * ((20000 - 1) + 1)) + 1;
+        randomNumber = randomNumber/1000/111;
+        return originLatitude + randomNumber;
+    }
+
+    public static double generateRandomLongitude(double originLongitude){
+        double randomNumber = (Math.random() * ((20000 - 1) + 1)) + 1;
+        randomNumber = randomNumber/1000/111;
+        return originLongitude + randomNumber;
     }
 }
